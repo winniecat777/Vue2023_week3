@@ -2,12 +2,13 @@ import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
 let productModal = null;
 let delProductModal = null;
+// productModal/delProductModal 必須是在全域環境宣告，假設直接從 mounted 內宣告，會導致該變數作用域只存在 mounted 範圍內（因為 mounted 也屬於函式），而無法在 openModal 函式中順利取得該變數，導致錯誤
 
 createApp({
   data() {
     return {
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      apiPath: 'winnie04',
+      apiPath: 'winnie05',
       products: [],
       isNew: false,
       tempProduct: {
@@ -16,7 +17,7 @@ createApp({
     }
   },
   mounted() {
-    productModal = new bootstrap.Modal(document.getElementById('productModal'), {
+    productModal = new bootstrap.Modal(this.$refs.productModal, {
       keyboard: false
     });
 
@@ -31,24 +32,27 @@ createApp({
     this.checkAdmin();
   },
   methods: {
+    // 確認使用者權限
     checkAdmin() {
       const url = `${this.apiUrl}/api/user/check`;
       axios.post(url)
         .then(() => {
-          this.getData();
+          this.getProducts();
         })
         .catch((err) => {
           alert(err.response.data.message)
           window.location = 'login.html';
         })
     },
-    getData() {
-      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products/all`;
-      axios.get(url).then((response) => {
-        this.products = response.data.products;
-      }).catch((err) => {
-        alert(err.response.data.message);
-      })
+    // 取得所有產品資訊
+    getProducts() {
+      const url = `${this.apiUrl}/api/${this.apiPath}/admin/products`; // 不加 all 有分頁
+      axios.get(url)
+        .then((res) => {
+          this.products = res.data.products;
+        }).catch((err) => {
+          alert(err.response.data.message);
+        })
     },
     updateProduct() {
       let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
@@ -67,7 +71,7 @@ createApp({
         alert(err.response.data.message);
       })
     },
-    openModal(isNew, item) {
+    openModal(isNew, product) {
       if (isNew === 'new') {
         this.tempProduct = {
           imagesUrl: [],
@@ -75,11 +79,11 @@ createApp({
         this.isNew = true;
         productModal.show();
       } else if (isNew === 'edit') {
-        this.tempProduct = { ...item };
+        this.tempProduct = { ...product };
         this.isNew = false;
         productModal.show();
       } else if (isNew === 'delete') {
-        this.tempProduct = { ...item };
+        this.tempProduct = { ...product };
         delProductModal.show()
       }
     },
