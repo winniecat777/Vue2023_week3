@@ -41,7 +41,7 @@ createApp({
         })
         .catch((err) => {
           alert(err.response.data.message)
-          window.location = 'login.html';
+          window.location = 'index.html';
         })
     },
     // 取得所有產品資訊
@@ -66,7 +66,7 @@ createApp({
       axios[http](url, { data: this.tempProduct }).then((response) => {
         alert(response.data.message);
         productModal.hide();
-        this.getData();
+        this.getProducts();
       }).catch((err) => {
         alert(err.response.data.message);
       })
@@ -93,7 +93,7 @@ createApp({
       axios.delete(url).then((response) => {
         alert(response.data.message);
         delProductModal.hide();
-        this.getData();
+        this.getProducts();
       }).catch((err) => {
         alert(err.response.data.message);
       })
