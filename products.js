@@ -54,11 +54,11 @@ createApp({
           alert(err.response.data.message);
         })
     },
-    updateProduct() {
+    updateProduct() {  // 新增
       let url = `${this.apiUrl}/api/${this.apiPath}/admin/product`;
       let http = 'post';
 
-      if (!this.isNew) {
+      if (!this.isNew) {  // 更新
         url = `${this.apiUrl}/api/${this.apiPath}/admin/product/${this.tempProduct.id}`;
         http = 'put'
       }
