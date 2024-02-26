@@ -2,7 +2,8 @@ import { createApp } from 'https://unpkg.com/vue@3/dist/vue.esm-browser.js';
 
 let productModal = null;
 let delProductModal = null;
-// productModal/delProductModal 必須是在全域環境宣告，假設直接從 mounted 內宣告，會導致該變數作用域只存在 mounted 範圍內（因為 mounted 也屬於函式），而無法在 openModal 函式中順利取得該變數，導致錯誤
+// productModal/delProductModal 在全域環境宣告，假設直接從 mounted 內宣告，會導致該變數作用域只存在 mounted 範圍內（因為 mounted 也屬於函式），而無法在 openModal 函式中順利取得該變數，導致錯誤
+// 但若架構比較複雜時，就會建議寫在 data 裡面再用 this 取得，程式碼會更好管理
 
 createApp({
   data() {
